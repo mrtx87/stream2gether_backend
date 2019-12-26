@@ -1,6 +1,10 @@
 package com.section9.stream2gether.services;
 
+import com.section9.stream2gether.models.ChatMessage;
+
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 public class Util {
 
@@ -13,5 +17,14 @@ public class Util {
 
     public static String getRandomAvatar(){
         return listOfAvatars.get((int) (Math.random() * listOfAvatars.size()));
+    }
+
+    public static ChatMessage createChatMessage(UUID from, String body){
+        ChatMessage message =  new ChatMessage();
+        message.setId(UUID.randomUUID());
+        message.setFrom(from);
+        message.setBody(body);
+        message.setCreatedAt(Instant.now());
+        return message;
     }
 }

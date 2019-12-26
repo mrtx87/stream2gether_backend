@@ -1,13 +1,10 @@
 package com.section9.stream2gether.services;
 
-import com.section9.stream2gether.models.DataTransferContainer;
-import com.section9.stream2gether.models.Room;
-import com.section9.stream2gether.models.User;
+import com.section9.stream2gether.models.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,13 +16,18 @@ public class AppService {
         rooms = new HashMap<>();
     }
 
-    public Optional<DataTransferContainer> createRoom() {
+    public DataTransferContainer createRoom() {
+        DataTransferContainer container = new DataTransferContainer();
         User user = createUser();
+        container.setUser(user);
+        container.setFrom(user.getId());
         Room room = new Room();
         room.addUser(user);
         rooms.put(room.getId(), room);
-        DataTransferContainer container = new DataTransferContainer();
-        return Optional.of();
+        container.setRoomId(room.getId());
+        ChatMessage initialMessage = Util.createChatMessage(null, Constants.CHAT_MESSAGE_INIT_TEXT);
+        container.setChatMessage(initialMessage);
+        return container;
     }
 
     private User createUser(){

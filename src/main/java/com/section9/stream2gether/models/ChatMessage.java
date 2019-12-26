@@ -6,7 +6,6 @@ import java.util.UUID;
 public class ChatMessage {
 
 
-
     UUID id;
     UUID from;
     String body;
