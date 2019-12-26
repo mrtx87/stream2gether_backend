@@ -8,6 +8,12 @@ public class User {
     String name;
     String iconUrl;
 
+    public User(String name, String iconUrl) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.iconUrl = iconUrl;
+    }
+
     public UUID getId() {
         return id;
     }
