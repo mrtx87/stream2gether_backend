@@ -1,5 +1,7 @@
 package com.section9.stream2gether.controllers;
 
+import com.section9.stream2gether.models.User;
+import com.section9.stream2gether.services.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,9 @@ import java.util.UUID;
 @RequestMapping("backend/rest")
 public class RestController {
 
+
+    @Autowired
+    AppService appService;
 
 	/*@PostMapping(path = { "/data/register" })
 	public ResponseEntity<UserDTO> registerUser(@RequestBody Credentials credentials) {
@@ -38,4 +43,14 @@ public class RestController {
 
 	}*/
 
+
+    @GetMapping(path = { "/create-room" })
+    public ResponseEntity<User> requestCreateRoom() {
+        Optional<List<RoomDTO>> chatRooms = appService.createRoom();
+        if (chatRooms.isPresent()) {
+            return ResponseEntity.ok().body(chatRooms.get());
+        } else {
+            return ResponseEntity.ok().body(new ArrayList<ChatRoomDTO>());
+        }
+        return null;
 }
