@@ -13,5 +13,3 @@ BRANCHING HOW-TO
     AFTER REVIEW:
         If the review is done and there are no further changes needed. The reviewer merges the feature branch into the master branch.
         Of Course, if the reviewer needs help merging, the developer should always support the reviewer at merging.
-
-	
