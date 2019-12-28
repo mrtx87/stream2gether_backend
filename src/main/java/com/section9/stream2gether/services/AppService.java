@@ -35,7 +35,7 @@ public class AppService {
     }
 
     public DataTransferContainer joinRoom(UUID roomId) {
-        if(rooms.containsKey(roomId)){
+        if(!rooms.containsKey(roomId)){
             return null;
         }
         DataTransferContainer container = new DataTransferContainer();
@@ -47,7 +47,7 @@ public class AppService {
         room.addUser(user);
         container.setRoomId(room.getId());
 
-        ChatMessage joinMessage = Util.createChatMessage(null, Constants.getRandomJoinMessage(user.getName()));
+        ChatMessage joinMessage = Util.createChatMessage(null, Util.getRandomJoinMessage(user.getName()));
         container.setChatMessage(joinMessage);
 
         return container;
