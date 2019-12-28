@@ -12,25 +12,48 @@ public class AppService {
 
     private Map<UUID, Room> rooms;
 
-    public AppService(){
+    public AppService() {
         rooms = new HashMap<>();
     }
 
     public DataTransferContainer createRoom() {
         DataTransferContainer container = new DataTransferContainer();
+
         User user = createUser();
         container.setUser(user);
         container.setFrom(user.getId());
+
         Room room = new Room();
-        room.addUser(user);
         rooms.put(room.getId(), room);
+        room.addUser(user);
         container.setRoomId(room.getId());
+
         ChatMessage initialMessage = Util.createChatMessage(null, Constants.CHAT_MESSAGE_INIT_TEXT);
         container.setChatMessage(initialMessage);
+
         return container;
     }
 
-    private User createUser(){
+    public DataTransferContainer joinRoom(UUID roomId) {
+        if(rooms.containsKey(roomId)){
+            return null;
+        }
+        DataTransferContainer container = new DataTransferContainer();
+        User user = createUser();
+        container.setUser(user);
+        container.setFrom(user.getId());
+
+        Room room = rooms.get(roomId);
+        room.addUser(user);
+        container.setRoomId(room.getId());
+
+        ChatMessage joinMessage = Util.createChatMessage(null, Constants.getRandomJoinMessage(user.getName()));
+        container.setChatMessage(joinMessage);
+
+        return container;
+    }
+
+    private User createUser() {
         String name = Util.getRandomName();
         String avatar = Util.getRandomAvatar();
         return new User(name, avatar);
@@ -39,7 +62,9 @@ public class AppService {
     public Map<UUID, Room> getRooms() {
         return rooms;
     }
+
     public void setRooms(Map<UUID, Room> rooms) {
         this.rooms = rooms;
     }
+
 }

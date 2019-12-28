@@ -44,7 +44,6 @@ public class RestController {
 
 	}*/
 
-
     @GetMapping(path = {"/create-room"})
     public ResponseEntity<DataTransferContainer> requestCreateRoom() {
         DataTransferContainer dtc = appService.createRoom();
@@ -53,4 +52,14 @@ public class RestController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    @GetMapping(path = {"/join-room/{roomId}"})
+    public ResponseEntity<DataTransferContainer> requestJoinRoom(@PathVariable("roomId") UUID roomId) {
+        DataTransferContainer dtc = appService.joinRoom(roomId);
+        if (dtc != null) {
+            return ResponseEntity.ok().body(dtc);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 }
