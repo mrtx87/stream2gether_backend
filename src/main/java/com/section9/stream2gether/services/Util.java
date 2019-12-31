@@ -33,6 +33,10 @@ public class Util {
             "Aufgepasst: %s betritt das Pakett.",
             "Mit Pauken und Trompeten: Es beehrt %s die anwesende Gesellschaft!",
             "In bescheidener Unbescheidenheit betritt %s den Raum."
+            "An scheibar unheilbarer Würde erkrankt, beschreitet %s den Raum.",
+            "Aus den Schatten tritt ins Licht - %s!",
+            "Wachen! Wachen! Ach ne, ist doch nur %s.",
+            "%s ante portas!"
     };
 
     public static String getRandomJoinMessage(String userName){
