@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @org.springframework.web.bind.annotation.RestController
 @CrossOrigin(origins = {"http://localhost", "http://localhost:4200", "https://localhost:4200"})
@@ -57,9 +58,11 @@ public class RestController {
     public ResponseEntity<DataTransferContainer> requestJoinRoom(@PathVariable("roomId") UUID roomId) {
         DataTransferContainer dtc = appService.joinRoom(roomId);
         if (dtc != null) {
+            appService.processJoinRoomNotification(dtc);
             return ResponseEntity.ok().body(dtc);
         }
         return ResponseEntity.badRequest().build();
     }
+
 
 }
