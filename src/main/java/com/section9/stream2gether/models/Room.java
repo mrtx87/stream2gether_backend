@@ -1,7 +1,6 @@
 package com.section9.stream2gether.models;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Room {
 
@@ -13,14 +12,6 @@ public class Room {
         this.id = UUID.randomUUID();
         users = new HashMap<>();
         chatMessages = new ArrayList<>();
-    }
-
-    public Map<UUID, User> getUsers(){
-        return users;
-    }
-
-    public List<User> getUsersAsListOfUUID(){
-        return users.values().stream().collect(Collectors.toList());
     }
 
     public void addUser(User user){

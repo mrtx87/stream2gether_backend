@@ -1,6 +1,8 @@
 package com.section9.stream2gether.models;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class DataTransferContainer {
@@ -10,15 +12,6 @@ public class DataTransferContainer {
     List<User> users;
     UUID roomId;
     ChatMessage chatMessage;
-    DTC_PURPOSE purpose;
-
-    public DTC_PURPOSE getPurpose() {
-        return purpose;
-    }
-
-    public void setPurpose(DTC_PURPOSE purpose) {
-        this.purpose = purpose;
-    }
 
     public ChatMessage getChatMessage() {
         return chatMessage;
