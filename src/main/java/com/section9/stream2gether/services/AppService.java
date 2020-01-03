@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +174,19 @@ public class AppService {
         if(authenticate(roomId, videoPlayerAction.getFrom())) {
             Room room = getRoom(roomId);
             this.playlistService.executeVideoPlayerAction(room, videoPlayerAction);
+        }
+    }
+
+    public void processChatmessage(UUID roomId, DataTransferContainer dtc) {
+        if(authenticate(roomId , dtc.getFrom())) {
+            Room room = getRoom(roomId);
+            List<UUID> userIds = room.getUserIds();
+            ChatMessage chatMessage = dtc.getChatMessage();
+            chatMessage.setId(UUID.randomUUID());
+            chatMessage.setCreatedAt(Instant.now());
+            dtc.setPurpose(Constants.PURPOSE_SEND_CHATMESSAGE);
+            notifyUsers(userIds,dtc);
+
         }
     }
 }
