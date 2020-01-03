@@ -2,42 +2,20 @@ package com.section9.stream2gether.models;
 
 import java.util.UUID;
 
-public class Action {
+public class VideoPlayerAction {
 
-    UUID origin;
-    private String playbackRate;
-    private String playerState;
-    private String timestamp;
+    UUID from;
+    VideoPlayerSettings videoPlayerSettings;
 
-    public UUID getOrigin() {
-        return origin;
+    public UUID getFrom() {
+        return from;
     }
 
-    public void setOrigin(UUID origin) {
-        this.origin = origin;
-    }
+    public void setFrom(UUID from) { this.from = from; }
 
-    public String getPlaybackRate() {
-        return playbackRate;
-    }
+    public VideoPlayerSettings getVideoPlayerSettings() { return videoPlayerSettings; }
 
-    public void setPlaybackRate(String playbackRate) {
-        this.playbackRate = playbackRate;
-    }
-
-    public String getPlayerState() {
-        return playerState;
-    }
-
-    public void setPlayerState(String playerState) {
-        this.playerState = playerState;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public void setVideoPlayerSettings(VideoPlayerSettings playerState) {
+        this.videoPlayerSettings = playerState;
     }
 }

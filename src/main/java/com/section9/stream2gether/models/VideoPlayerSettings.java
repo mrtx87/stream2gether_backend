@@ -1,9 +1,9 @@
 package com.section9.stream2gether.models;
 
-public class VideoPlayerSetting {
+public class VideoPlayerSettings {
     String api;
     float playbackRate;
-    VideoPlayerStateType playerState;
+    int state;
     int timestamp;
     Video video;
 
@@ -14,37 +14,20 @@ public class VideoPlayerSetting {
     public void setApi(String api) {
         this.api = api;
     }
+    public int getState() { return state; }
 
-    public float getPlaybackRate() {
-        return playbackRate;
-    }
+    public void setState(int state) { this.state = state; }
 
-    public void setPlaybackRate(float playbackRate) {
-        this.playbackRate = playbackRate;
-    }
+    public float getPlaybackRate() { return playbackRate; }
 
-    public VideoPlayerStateType getPlayerState() {
-        return playerState;
-    }
+    public void setPlaybackRate(float playbackRate) { this.playbackRate = playbackRate; }
 
-    public void setPlayerState(VideoPlayerStateType playerState) {
-        this.playerState = playerState;
-    }
+    public int getTimestamp() { return timestamp; }
 
-    public int getTimestamp() {
-        return timestamp;
-    }
+    public void setTimestamp(int timestamp) { this.timestamp = timestamp; }
 
-    public void setTimestamp(int timestamp) {
-        this.timestamp = timestamp;
-    }
+    public Video getVideo() { return video; }
 
-    public Video getVideo() {
-        return video;
-    }
-
-    public void setVideo(Video video) {
-        this.video = video;
-    }
+    public void setVideo(Video video) { this.video = video; }
 
 }

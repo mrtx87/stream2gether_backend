@@ -8,18 +8,12 @@ import java.util.UUID;
 public class DataTransferContainer {
 
     UUID from;
+    String purpose;
     User user;
     List<User> users;
     UUID roomId;
     ChatMessage chatMessage;
 
-    public ChatMessage getChatMessage() {
-        return chatMessage;
-    }
-
-    public void setChatMessage(ChatMessage chatMessage) {
-        this.chatMessage = chatMessage;
-    }
 
     public UUID getFrom() {
         return from;
@@ -27,6 +21,14 @@ public class DataTransferContainer {
 
     public void setFrom(UUID from) {
         this.from = from;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
     public User getUser() {
@@ -51,5 +53,14 @@ public class DataTransferContainer {
 
     public void setRoomId(UUID roomId) {
         this.roomId = roomId;
+    }
+
+
+    public ChatMessage getChatMessage() {
+        return chatMessage;
+    }
+
+    public void setChatMessage(ChatMessage chatMessage) {
+        this.chatMessage = chatMessage;
     }
 }

@@ -1,19 +1,29 @@
 package com.section9.stream2gether.services;
 
 import com.section9.stream2gether.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class AppService {
 
+    @Autowired
+    PlaylistService playlistService;
+
+    @Autowired
+    SimpMessagingTemplate messagingService;
+
     private Map<UUID, Room> rooms;
 
     public AppService() {
         rooms = new HashMap<>();
+
     }
 
     public DataTransferContainer createRoom() {
@@ -34,12 +44,15 @@ public class AppService {
         return container;
     }
 
-    public DataTransferContainer joinRoom(UUID roomId) {
+    public DataTransferContainer joinRoom(UUID roomId, DataTransferContainer requestDTC) {
         if(!rooms.containsKey(roomId)){
             return null;
         }
         DataTransferContainer container = new DataTransferContainer();
         User user = createUser();
+        if(requestDTC.getUser().getName() != null) {
+            user.setName(requestDTC.getUser().getName());
+        }
         container.setUser(user);
         container.setFrom(user.getId());
 
@@ -67,4 +80,99 @@ public class AppService {
         this.rooms = rooms;
     }
 
+
+    public boolean processPlaylistCommand(UUID roomId, UUID userId, PlaylistCommand playlistCmd) {
+        if(authenticate(roomId, userId)) {
+            Room room = getRoom(roomId);
+
+
+            return playlistService.executePlaylistCommand(room, playlistCmd);
+        }
+        return false;
+    }
+
+    private Room getRoom(UUID roomId) {
+        return this.rooms.get(roomId);
+    }
+
+    private boolean authenticate(UUID roomId, UUID userId) {
+        if(hasRoom(roomId)) {
+            Room room = rooms.get(roomId);
+            return hasUser(room, userId);
+        }
+        return false;
+    }
+
+    private boolean hasRoom(UUID roomId) {
+        return this.rooms.containsKey(roomId);
+    }
+
+    private boolean hasUser(Room room, UUID userId) {
+        return room.hasUser(userId);
+    }
+
+    private void notifyUser(UUID userId, DataTransferContainer dtc) {
+        this.messagingService.convertAndSend("/client/" + userId, dtc);
+    }
+
+    private void notifyUsers(List<UUID> userIds, DataTransferContainer dtc) {
+        userIds.stream().forEach(userId -> notifyUser(userId, dtc));
+    }
+
+    public void processDisconnectClient(DataTransferContainer transferContainer) {
+        if(authenticate(transferContainer.getRoomId(), transferContainer.getFrom())) {
+            Room room = getRoom(transferContainer.getRoomId());
+            User removedUser = room.removeUser(transferContainer.getFrom());
+            if(Util.isNotPresent(removedUser)) {
+                return;
+            }
+
+            transferContainer.setPurpose(Constants.PURPOSE_DISCONNECTED_CLIENT);
+            notifyUsers(room.getUserIds(), transferContainer);
+        }
+    }
+
+    public List<Video> getPlaylist(UUID roomId, UUID userId) {
+        if(authenticate(roomId, userId)) {
+            return getRoom(roomId).getPlaylist();
+        }
+        return null;
+    }
+
+    public PlaylistCommand getInitPlaylistCommand(UUID roomId, UUID userId) {
+        if(authenticate(roomId, userId)) {
+            //return getRoom(roomId).getPlaylist();
+        }
+        return null;
+    }
+
+    public List<User> getUsers(UUID roomId, UUID userId) {
+        if(authenticate(roomId, userId)) {
+            return getRoom(roomId).getUserList();
+        }
+        return null;
+    }
+
+    public VideoPlayerSettings getVideoPlayerSettings(UUID roomId, UUID userId) {
+        if(authenticate(roomId, userId)) {
+            Room room = getRoom(roomId);
+            return room.getVideoPlayerSettings();
+        }
+        return null;
+    }
+
+    public PlaylistState getPlaylistState(UUID roomId, UUID userId) {
+        if(authenticate(roomId, userId)) {
+            Room room = getRoom(roomId);
+            return room.getPlaylistState();
+        }
+        return null;
+    }
+
+    public void processSyncRequest(UUID roomId, VideoPlayerAction videoPlayerAction) {
+        if(authenticate(roomId, videoPlayerAction.getFrom())) {
+            Room room = getRoom(roomId);
+            this.playlistService.executeVideoPlayerAction(room, videoPlayerAction);
+        }
+    }
 }
