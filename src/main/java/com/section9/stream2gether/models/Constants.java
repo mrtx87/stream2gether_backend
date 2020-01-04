@@ -23,6 +23,8 @@ public class Constants {
     public static final int PAUSED = 2;
     public static final int BUFFERING = 3;
     public static final int PLACED = 5;
+    public static final int REQUEST_SYNC =  100;
+    public static final int SYNC_REQUEST_RESPONSE = 200;
 
     public static final float DEFAULT_PLAYBACK_RATE = 1;
 

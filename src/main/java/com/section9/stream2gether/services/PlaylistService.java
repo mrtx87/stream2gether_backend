@@ -6,7 +6,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -33,10 +33,20 @@ public class PlaylistService {
     public PlaylistService() {
     }
 
+
+    private int indexOf(Room room, Video video) {
+        for(int i = 0; i < room.getPlaylist().size(); i++) {
+            if(video.getId().equals(room.getPlaylist().get(i).getId())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public boolean executePlaylistCommand(Room room, PlaylistCommand playlistCmd) {
         List<Video> playlist = room.getPlaylist();
         Video currentVideo = room.getCurrentVideo();
-        int currentVideoIndex = playlist.indexOf(currentVideo);
+        int currentVideoIndex = indexOf(room, currentVideo);
         switch(playlistCmd.getAction()) {
             case PL_CMD_APPEND:
                 playlistCmd.getVideo().setId(UUID.randomUUID());
@@ -130,10 +140,26 @@ public class PlaylistService {
 
 
     public boolean executeVideoPlayerAction(Room room, VideoPlayerAction videoPlayerAction) {
+
+        if(videoPlayerAction.getVideoPlayerSettings().getState() == Constants.REQUEST_SYNC) {
+
+            room.addUserRequestingSync(videoPlayerAction.getFrom());
+            List<UUID> withoutRequestingUserId = room.getUserIds().stream().filter(u -> !u.equals(videoPlayerAction.getFrom())).collect(Collectors.toList());
+            UUID requestingResponseUserId = withoutRequestingUserId.get(0);
+            notifyUserAboutVideoPlayerAction(requestingResponseUserId, videoPlayerAction);
+
+            return true;
+        }
+
+        if(videoPlayerAction.getVideoPlayerSettings().getState() == Constants.SYNC_REQUEST_RESPONSE) {
+
+            return true;
+        }
+
         Video currentVideo = room.getCurrentVideo();
         room.setVideoPlayerSettings(videoPlayerAction.getVideoPlayerSettings());
         notifyUsersAboutVideoPlayerAction(room.getUserIds(), videoPlayerAction);
-        return false;
+        return true;
     }
 
     public Video getNextVideo(Room room) {
@@ -169,6 +195,14 @@ public class PlaylistService {
         return null;
     }
 
+    public void processRespondingToJoinSyncRequest(Room room, VideoPlayerAction videoPlayerAction) {
+        int timestamp = videoPlayerAction.getVideoPlayerSettings().getTimestamp();
+
+        videoPlayerAction.getVideoPlayerSettings().setTimestamp(timestamp+1);
+        notifyUsersAboutVideoPlayerAction(room.getRequestingJoinSyncs(), videoPlayerAction);
+        room.clearRequestedJoinSyncs();
+        System.out.println("SYNC LIST CLEARED");
+    }
     private void setPlaylistOrder(Room room, String order) {
         room.getPlaylistState().setOrder(order);
     }

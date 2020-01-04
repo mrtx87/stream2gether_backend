@@ -41,6 +41,11 @@ public class WebSocketController {
 		appService.processSyncRequest(roomId, videoPlayerAction);
 	}
 
+	@MessageMapping("/ws/roomId/{roomId}/responding-to-join-sync-request")
+	public void onReceiveRespondingToJoinSyncRequest(@DestinationVariable UUID roomId, @Nullable final VideoPlayerAction videoPlayerAction) {
+		appService.processRespondingToJoinSyncRequest(roomId, videoPlayerAction);
+	}
+
 	@MessageMapping("/ws/roomId/{roomId}/chatmessage")
 	public void onReceiveChatmessage(@DestinationVariable UUID roomId, @Nullable final DataTransferContainer dtc) {
 		appService.processChatmessage(roomId, dtc);

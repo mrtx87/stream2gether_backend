@@ -13,6 +13,7 @@ public class Room {
     private Map<UUID, User> users;
     private List<ChatMessage> chatMessages;
     private List<Video> playlist;
+    private List<UUID> requestedJoinSyncs;
 
     public Room() {
         this.id = UUID.randomUUID();
@@ -21,6 +22,7 @@ public class Room {
         playlist = new ArrayList<>();
         videoPlayerSettings = Util.DEFAULT_VIDEO_PLAYER_SETTINGS();
         playlistState = Util.DEFAULT_PLAYLIST_STATE();
+        requestedJoinSyncs = new ArrayList<>();
     }
 
     public void addUser(User user){
@@ -102,4 +104,16 @@ public class Room {
     public boolean playlistIsEmpty() { return playlist.size() == 0; }
 
     public void setPlaylistState(PlaylistState playlistState) { this.playlistState = playlistState; }
+
+    public void addUserRequestingSync(UUID userId) {
+        requestedJoinSyncs.add(userId);
+    }
+
+    public List<UUID> getRequestingJoinSyncs() {
+        return requestedJoinSyncs;
+    }
+
+    public void clearRequestedJoinSyncs() {
+        this.requestedJoinSyncs.clear();
+    }
 }

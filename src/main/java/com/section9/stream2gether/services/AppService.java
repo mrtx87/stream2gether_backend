@@ -189,4 +189,11 @@ public class AppService {
 
         }
     }
+
+    public void processRespondingToJoinSyncRequest(UUID roomId, VideoPlayerAction videoPlayerAction) {
+       if(authenticate(roomId, videoPlayerAction.getFrom())) {
+            Room room = getRoom(roomId);
+           playlistService.processRespondingToJoinSyncRequest(room, videoPlayerAction);
+       }
+    }
 }
