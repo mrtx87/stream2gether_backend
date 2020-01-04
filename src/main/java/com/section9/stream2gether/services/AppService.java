@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AppService {
@@ -29,7 +30,6 @@ public class AppService {
 
     public DataTransferContainer createRoom() {
         DataTransferContainer container = new DataTransferContainer();
-
         User user = createUser();
         container.setUser(user);
         container.setFrom(user.getId());
@@ -50,6 +50,7 @@ public class AppService {
             return null;
         }
         DataTransferContainer container = new DataTransferContainer();
+        container.setPurpose(Constants.PURPOSE_USER_JOINED);
         User user = createUser();
         if(requestDTC.getUser().getName() != null) {
             user.setName(requestDTC.getUser().getName());
@@ -63,6 +64,10 @@ public class AppService {
 
         ChatMessage joinMessage = Util.createChatMessage(null, Util.getRandomJoinMessage(user.getName()));
         container.setChatMessage(joinMessage);
+
+        if(container != null) {
+            processJoinRoomNotification(room.getUserIds(), container);
+        }
 
         return container;
     }
@@ -109,6 +114,14 @@ public class AppService {
     private boolean hasUser(Room room, UUID userId) {
         return room.hasUser(userId);
     }
+
+    public void processJoinRoomNotification(List<UUID> userIds, DataTransferContainer dtc) {
+        List<UUID> allButJoined = userIds.stream()
+                .filter(userId -> !userId.equals(dtc.getFrom()))
+                .collect(Collectors.toList());
+        notifyUsers(allButJoined, dtc);
+    }
+
 
     private void notifyUser(UUID userId, DataTransferContainer dtc) {
         this.messagingService.convertAndSend("/client/" + userId, dtc);

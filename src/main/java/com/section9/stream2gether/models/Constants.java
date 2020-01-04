@@ -8,8 +8,10 @@ public class Constants {
     public static final String CHAT_MESSAGE_INIT_TEXT = "Raum angelegt. Es kann los gehen.";
 
     //PURPOSES
-    public static final String PURPOSE_DISCONNECTED_CLIENT = "disconnected-client";
-    public static final String PURPOSE_SEND_CHATMESSAGE = "send-chatmessage";
+    public static final int PURPOSE_DISCONNECTED_CLIENT = 501;
+    public static final int PURPOSE_SEND_CHATMESSAGE = 502;
+    public static final int PURPOSE_USER_JOINED = 503;
+
 
 
 
@@ -23,7 +25,7 @@ public class Constants {
     public static final int PAUSED = 2;
     public static final int BUFFERING = 3;
     public static final int PLACED = 5;
-    public static final int REQUEST_SYNC =  100;
+    public static final int REQUEST_SYNC = 100;
     public static final int SYNC_REQUEST_RESPONSE = 200;
 
     public static final float DEFAULT_PLAYBACK_RATE = 1;

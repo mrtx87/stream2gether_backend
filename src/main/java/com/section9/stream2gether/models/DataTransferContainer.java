@@ -8,7 +8,7 @@ import java.util.UUID;
 public class DataTransferContainer {
 
     UUID from;
-    String purpose;
+    int purpose;
     User user;
     List<User> users;
     UUID roomId;
@@ -23,11 +23,11 @@ public class DataTransferContainer {
         this.from = from;
     }
 
-    public String getPurpose() {
+    public int getPurpose() {
         return purpose;
     }
 
-    public void setPurpose(String purpose) {
+    public void setPurpose(int purpose) {
         this.purpose = purpose;
     }
 
