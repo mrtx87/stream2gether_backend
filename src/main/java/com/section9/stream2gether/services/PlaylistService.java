@@ -34,7 +34,7 @@ public class PlaylistService {
     }
 
 
-    private int indexOf(Room room, Video video) {
+    private int indexOfVideo(Room room, Video video) {
         for(int i = 0; i < room.getPlaylist().size(); i++) {
             if(video.getId().equals(room.getPlaylist().get(i).getId())) {
                 return i;
@@ -46,14 +46,15 @@ public class PlaylistService {
     public boolean executePlaylistCommand(Room room, PlaylistCommand playlistCmd) {
         List<Video> playlist = room.getPlaylist();
         Video currentVideo = room.getCurrentVideo();
-        int currentVideoIndex = indexOf(room, currentVideo);
+        int currentVideoIndex = indexOfVideo(room, currentVideo);
+
         switch(playlistCmd.getAction()) {
             case PL_CMD_APPEND:
                 playlistCmd.getVideo().setId(UUID.randomUUID());
                 playlist.add(playlistCmd.getVideo());
                 if(playlist.size() == 1) {
                     room.setCurrentVideo(getNextVideo(room));
-                    intermediateNextVideoPlayerAction(room, playlistCmd.getFrom());
+                    executeNotifyAboutNextVideo(room, playlistCmd.getFrom());
                 }
                 break;
             case PL_CMD_INSERT_AT:
@@ -89,14 +90,14 @@ public class PlaylistService {
                 }
                 room.setCurrentVideo(playlistCmd.getVideo());
                 room.getVideoPlayerSettings().setState(Constants.PLAYING);
-                intermediateNextVideoPlayerAction(room, playlistCmd.getFrom());
+                executeNotifyAboutNextVideo(room, playlistCmd.getFrom());
             }
             break;
             case PL_CMD_START_NEXT : {
                 Video nextVideo = getNextVideo(room);
                 room.setCurrentVideo(nextVideo);
                 playlistCmd.setVideo(nextVideo);
-                intermediateNextVideoPlayerAction(room, playlistCmd.getFrom());
+                executeNotifyAboutNextVideo(room, playlistCmd.getFrom());
                 return true;
             }
             case PL_CMD_SEQUENCE_ORDER : {
@@ -130,7 +131,7 @@ public class PlaylistService {
         return true;
     }
 
-    private void intermediateNextVideoPlayerAction(Room room, UUID from) {
+    private void executeNotifyAboutNextVideo(Room room, UUID from) {
         VideoPlayerAction videoPlayerAction = Util.createEmptyVideoPlayerAction(from);
         VideoPlayerSettings currentVideoPlayerSettings = room.getVideoPlayerSettings();
         currentVideoPlayerSettings.setTimestamp(0);
@@ -197,7 +198,6 @@ public class PlaylistService {
 
     public void processRespondingToJoinSyncRequest(Room room, VideoPlayerAction videoPlayerAction) {
         int timestamp = videoPlayerAction.getVideoPlayerSettings().getTimestamp();
-
         videoPlayerAction.getVideoPlayerSettings().setTimestamp(timestamp+1);
         notifyUsersAboutVideoPlayerAction(room.getRequestingJoinSyncs(), videoPlayerAction);
         room.clearRequestedJoinSyncs();

@@ -85,8 +85,6 @@ public class AppService {
     public boolean processPlaylistCommand(UUID roomId, UUID userId, PlaylistCommand playlistCmd) {
         if(authenticate(roomId, userId)) {
             Room room = getRoom(roomId);
-
-
             return playlistService.executePlaylistCommand(room, playlistCmd);
         }
         return false;
