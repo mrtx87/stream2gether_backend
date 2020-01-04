@@ -14,6 +14,7 @@ public class Room {
     private List<ChatMessage> chatMessages;
     private List<Video> playlist;
     private List<UUID> requestedJoinSyncs;
+    private List<Integer> randomPlaylistOrder;
 
     public Room() {
         this.id = UUID.randomUUID();
@@ -23,6 +24,7 @@ public class Room {
         videoPlayerSettings = Util.DEFAULT_VIDEO_PLAYER_SETTINGS();
         playlistState = Util.DEFAULT_PLAYLIST_STATE();
         requestedJoinSyncs = new ArrayList<>();
+        this.setShuffledPlaylistIndices();
     }
 
     public void addUser(User user){
@@ -73,7 +75,24 @@ public class Room {
 
     public void setPlaylist(List<Video> playlist) {
         this.playlist = playlist;
+        this.setShuffledPlaylistIndices();
     }
+
+    private void setShuffledPlaylistIndices() {
+        Integer playlistLength = this.playlist.size();
+        if(playlistLength == 0){
+            this.randomPlaylistOrder = Arrays.asList(0);
+        } else {
+            List<Integer> indices = new ArrayList<>();
+            for (int i = 0; i < playlistLength; i++) {
+                indices.add(i);
+            }
+            Collections.shuffle(indices);
+            this.randomPlaylistOrder = indices;
+        }
+    }
+
+    public List<Integer> getRandomPlaylistOrder () { return this.randomPlaylistOrder; };
 
     public User removeUser(UUID id) {
         return users.remove(id);

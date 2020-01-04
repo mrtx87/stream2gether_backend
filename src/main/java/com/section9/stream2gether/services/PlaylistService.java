@@ -166,34 +166,38 @@ public class PlaylistService {
     public Video getNextVideo(Room room) {
         PlaylistState playlistState = room.getPlaylistState();
         List<Video> playlist = room.getPlaylist();
+        List<Integer> randomizedIndices = room.getRandomPlaylistOrder();
+        Boolean sequential = playlistState.getOrder().equals(PL_CMD_SEQUENCE_ORDER);
+        Boolean randomOrder = playlistState.getOrder().equals(PL_CMD_RANDOM_ORDER);
         if(playlist.size() == 0) {
             return null;
         }
-        if(playlistState.getOrder().equals(PL_CMD_SEQUENCE_ORDER)) {
+        if(sequential ^ randomOrder) {
+            int firstVideoIndex, currentVideoIndex, nextVideoIndex;
+            if(sequential){
+                firstVideoIndex = 0;
+                currentVideoIndex = playlist.indexOf(room.getCurrentVideo());
+                nextVideoIndex = playlist.size() % (currentVideoIndex + 1);
+            } else {
+                firstVideoIndex = randomizedIndices.get(0);
+                currentVideoIndex = randomizedIndices.indexOf(room.getCurrentVideo());
+                nextVideoIndex = randomizedIndices.get(randomizedIndices.size() % (currentVideoIndex+1));
+            }
+
             if(!room.hasCurrentVideo()) {
-                return playlist.get(0);
-            }else{
-                int currentVideoIndex = playlist.indexOf(room.getCurrentVideo());
-                if(currentVideoIndex < playlist.size()-1) {
-                    Video nextVideo = playlist.get(currentVideoIndex + 1);
-                    return nextVideo;
+                return playlist.get(firstVideoIndex);
+            } else {
+                if(nextVideoIndex == firstVideoIndex && playlistState.getRepeat().equals(PL_CMD_NO_REPEAT)){
+                    return null;
+                } else if(playlistState.getRepeat().equals(PL_CMD_REPEAT_ONE)) {
+                    return room.getCurrentVideo();
                 }else{
-                    if(playlistState.getRepeat().equals(PL_CMD_NO_REPEAT)){
-                        return null;
-                    }
-                    if(playlistState.getRepeat().equals(PL_CMD_REPEAT_ONE)) {
-                        return room.getCurrentVideo();
-                    }else{
-                        return playlist.get(0);
-                    }
+                    return playlist.get(nextVideoIndex);
                 }
             }
+        } else {
+            return null;
         }
-
-        if(playlistState.getOrder().equals(PL_CMD_RANDOM_ORDER)) {
-
-        }
-        return null;
     }
 
     public void processRespondingToJoinSyncRequest(Room room, VideoPlayerAction videoPlayerAction) {
