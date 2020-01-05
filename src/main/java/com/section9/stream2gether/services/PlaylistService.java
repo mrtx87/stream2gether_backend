@@ -57,8 +57,16 @@ public class PlaylistService {
                     executeNotifyAboutNextVideo(room, playlistCmd.getFrom());
                 }
                 break;
-            case PL_CMD_INSERT_AT:
-
+            case PL_CMD_INSERT_AT:{
+                playlistCmd.getVideo().setId(UUID.randomUUID());
+                playlist.add(playlistCmd.getIndex(), playlistCmd.getVideo());
+            }
+                break;
+            case PL_CMD_CHANGE_POSITION : {
+                Video video = playlist.get(playlistCmd.getPreviousIndex());
+                playlist.remove(playlistCmd.getPreviousIndex());
+                playlist.add(playlistCmd.getIndex(), video);
+            }
                 break;
             case PL_CMD_DELETE:
 
@@ -122,8 +130,6 @@ public class PlaylistService {
             break;
             case PL_CMD_IMPORT_PLAYLIST :
             break;
-            case PL_CMD_CHANGE_POSITION :
-                break;
             default: return false;
         }
 

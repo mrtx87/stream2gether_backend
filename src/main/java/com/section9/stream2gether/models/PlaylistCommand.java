@@ -8,6 +8,7 @@ public class PlaylistCommand {
     UUID from;
     String action;
     int index;
+    int previousIndex;
     Video video;
     List<Video> playlist;
 
@@ -28,6 +29,12 @@ public class PlaylistCommand {
     }
     public void setIndex(int index) {
         this.index = index;
+    }
+    public int getPreviousIndex() {
+        return previousIndex;
+    }
+    public void setPreviousIndex(int previousIndex) {
+        this.previousIndex = previousIndex;
     }
     public Video getVideo() {
         return video;

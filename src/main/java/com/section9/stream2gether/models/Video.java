@@ -11,6 +11,7 @@ public class Video {
     String title;
     String iconUrl;
     Instant createdAt;
+    String channelTitle;
 
     public String getApi() { return api; }
 
@@ -47,4 +48,8 @@ public class Video {
     public Instant getCreatedAt() { return createdAt; }
 
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+
+    public String getChannelTitle() { return channelTitle; }
+
+    public void setChannelTitle(String channelTitle) { this.channelTitle = channelTitle; }
 }
