@@ -97,6 +97,7 @@ public class Room {
 
     public void setCurrentVideo(Video video) {
         this.videoPlayerSettings.setVideo(video);
+        this.videoPlayerSettings.setApi(video.api);
     }
 
     public PlaylistState getPlaylistState() { return playlistState; }

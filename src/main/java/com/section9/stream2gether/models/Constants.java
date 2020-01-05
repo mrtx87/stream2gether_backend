@@ -4,6 +4,9 @@ import com.section9.stream2gether.services.Util;
 
 public class Constants {
 
+    public static final String YOUTUBE_ID = "youtube";
+    public static final String DIRECT_VIDEO_ID = "direct-video";
+
     //TEXTS
     public static final String CHAT_MESSAGE_INIT_TEXT = "Raum angelegt. Es kann los gehen.";
 
