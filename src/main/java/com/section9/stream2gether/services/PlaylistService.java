@@ -129,6 +129,11 @@ public class PlaylistService {
             }
             break;
             case PL_CMD_IMPORT_PLAYLIST :
+                playlistCmd
+                        .getPlaylist()
+                        .forEach( plVideo -> {
+                            plVideo.setId(UUID.randomUUID()); playlist.add(plVideo);
+                        });
             break;
             default: return false;
         }
