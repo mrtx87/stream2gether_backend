@@ -4,7 +4,7 @@ public class VideoPlayerSettings {
     String api;
     float playbackRate;
     int state;
-    int timestamp;
+    double timestamp;
     Video video;
 
     public String getApi() {
@@ -22,9 +22,9 @@ public class VideoPlayerSettings {
 
     public void setPlaybackRate(float playbackRate) { this.playbackRate = playbackRate; }
 
-    public int getTimestamp() { return timestamp; }
+    public double getTimestamp() { return timestamp; }
 
-    public void setTimestamp(int timestamp) { this.timestamp = timestamp; }
+    public void setTimestamp(double timestamp) { this.timestamp = timestamp; }
 
     public Video getVideo() { return video; }
 

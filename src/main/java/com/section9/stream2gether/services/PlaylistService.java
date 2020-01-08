@@ -165,7 +165,7 @@ public class PlaylistService {
 
         Video currentVideo = room.getCurrentVideo();
         room.setVideoPlayerSettings(videoPlayerAction.getVideoPlayerSettings());
-        notifyUsersAboutVideoPlayerAction(room.getUserIds(), videoPlayerAction);
+        notifyUsersAboutVideoPlayerAction(room.getUserIds().stream().filter(id -> !videoPlayerAction.getFrom().equals(id)).collect(Collectors.toList()), videoPlayerAction);
         return true;
     }
 
@@ -203,7 +203,7 @@ public class PlaylistService {
     }
 
     public void processRespondingToJoinSyncRequest(Room room, VideoPlayerAction videoPlayerAction) {
-        int timestamp = videoPlayerAction.getVideoPlayerSettings().getTimestamp();
+        double timestamp = videoPlayerAction.getVideoPlayerSettings().getTimestamp();
         videoPlayerAction.getVideoPlayerSettings().setTimestamp(timestamp+1);
         notifyUsersAboutVideoPlayerAction(room.getRequestingJoinSyncs(), videoPlayerAction);
         room.clearRequestedJoinSyncs();
